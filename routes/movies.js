@@ -7,6 +7,21 @@ const WatchList = require("../models/watchList");
 
 const OMDB_URL = "http://www.omdbapi.com/?";
 
+/** GET / { movieId }
+ * 
+ * 
+ * 
+ */
+router.get("/:movieId", async (req, res, next) => {
+  console.log("Getting movie from omdb");
+  try {
+    const movie = await axios.get(`${OMDB_URL}`, { params: { i: req.params.movieId, apikey: OMBDKey } });
+    return res.status(200).json(movie.data);
+  } catch (err) {
+    next(err);
+  }
+});
+
 /**  POST / { }
  * 
  */

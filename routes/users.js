@@ -9,7 +9,6 @@ const WatchList = require("../models/watchList");
  */
 
 router.get("/:username/movies", async function (req, res, next) {
-  console.log("getting the titles");
   const titles = await WatchList.getTitles(req.params.username);
   return res.json(titles);
 });
