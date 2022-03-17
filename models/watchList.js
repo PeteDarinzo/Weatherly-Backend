@@ -55,6 +55,16 @@ class WatchList {
     const list = result.rows;
     return list;
   }
+
+
+  static async removeTitle(userId, movieId) {
+    const result = db.query(
+      `DELETE FROM watchlist
+       WHERE user_id = $1
+       AND movie_id = $2`,
+      [userId, movieId])
+  }
+
 }
 
 module.exports = WatchList;

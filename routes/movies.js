@@ -9,9 +9,11 @@ const OMDB_URL = "http://www.omdbapi.com/?";
 
 /** GET / { movieId }
  * 
+ * Query OMBD for a movie by id
  * 
- * 
+ * Returns JSON movie data
  */
+
 router.get("/:movieId", async (req, res, next) => {
   console.log("Getting movie from omdb");
   try {
@@ -22,12 +24,15 @@ router.get("/:movieId", async (req, res, next) => {
   }
 });
 
-/**  POST / { }
+/** GET / { title }
+ * Query OMDB for a movie by title
  * 
+ * Returns JSON movie data
  */
-router.post("/", async (req, res, next) => {
+
+router.get("/title/:title", async (req, res, next) => {
   try {
-    const movies = await axios.get(`${OMDB_URL}`, { params: { t: req.body.title, apikey: OMBDKey } });
+    const movies = await axios.get(`${OMDB_URL}`, { params: { t: req.params.title, apikey: OMBDKey } });
     return res.status(200).json(movies.data);
   } catch (err) {
     next(err);
@@ -35,9 +40,9 @@ router.post("/", async (req, res, next) => {
 });
 
 
-/** POST / { movie }
+/** POST / { id, title, posterUrl }
  * 
- * movie should be { id, title, posterUrl }
+ * Add movie to database
  * 
  * Returns { }
  * 
@@ -46,9 +51,8 @@ router.post("/", async (req, res, next) => {
 router.post("/save", async (req, res, next) => {
   try {
     await Movie.create({ ...req.body });
-    await WatchList.addMovie({ userId: 1, movieId: req.body.id });
   } catch (err) {
-    next(err)
+    next(err);
   }
 });
 
