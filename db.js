@@ -3,44 +3,45 @@
 const { Client } = require("pg");
 const { getDatabaseUri } = require("./config");
 
-let client
+let db
 
-
-/** MY METHOD **/
+/** Springboard Method */
 if (process.env.NODE_ENV === "production") {
-  client = new Client({
-    host: "localhost",
-    user: "pete",
-    password: "vampire",
-    database: getDatabaseUri(),
+  db = new Client({
+    connectionString: getDatabaseUri(),
     ssl: {
       rejectUnauthorized: false
     }
   });
 } else {
-  client = new Client({
-    host: "localhost",
-    user: "pete",
-    password: "vampire",
-    database: getDatabaseUri()
+  db = new Client({
+    connectionString: getDatabaseUri()
   });
+}
+/** END Springboard Method */
+
+
+/** MY METHOD **/
+// if (process.env.NODE_ENV === "production") {
+//   db = new Client({
+//     host: "localhost",
+//     user: "",
+//     password: "",
+//     database: getDatabaseUri(),
+//     ssl: {
+//       rejectUnauthorized: false
+//     }
+//   });
+// } else {
+//   db = new Client({
+//     host: "localhost",
+//     user: "",
+//     password: "",
+//     database: getDatabaseUri()
+//   });
 }
 /** END MY METHOD **/
 
+db.connect();
 
-// let DB_URI;
-
-// DB_URI = {
-//   host: "localhost",
-//   user: "pete",
-//   password: "vampire",
-//   database: ""
-// }
-
-// DB_URI.database = ("weatherly");
-
-// const client = new Client(DB_URI);
-
-client.connect();
-
-module.exports = client;
+module.exports = db;
