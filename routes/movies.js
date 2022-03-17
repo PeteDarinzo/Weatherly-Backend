@@ -3,7 +3,6 @@ const router = new express.Router();
 const axios = require("axios");
 const OMBDKey = require("../API_KEY");
 const Movie = require("../models/movie");
-const WatchList = require("../models/watchList");
 
 const OMDB_URL = "http://www.omdbapi.com/?";
 

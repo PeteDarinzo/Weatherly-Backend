@@ -1,7 +1,7 @@
 const express = require("express");
 const router = new express.Router();
 const axios = require("axios");
-const WatchList = require("../models/watchList");
+const WatchList = require("../models/watchlist");
 
 /** GET / { user } 
  *   
@@ -21,10 +21,10 @@ router.get("/:username/movies", async (req, res, next) => {
  * 
  */
 
-router.post("/:userId/movies", async (req, res, next) => {
+router.post("/:username/movies", async (req, res, next) => {
   console.log("saving to watchlist");
   try {
-    await WatchList.addMovie({ userId: req.params.userId, movieId: req.body.movieId });
+    await WatchList.addMovie({ username: req.params.username, movieId: req.body.movieId });
   } catch (err) {
     next(err);
   }
@@ -36,10 +36,10 @@ router.post("/:userId/movies", async (req, res, next) => {
  * 
  */
 
-router.delete("/:userId/movies", async (req, res, next) => {
+router.delete("/:username/movies", async (req, res, next) => {
   console.log(`deleting ${req.body.movieId}`);
   try {
-    await WatchList.removeTitle(req.params.userId, req.body.movieId)
+    await WatchList.removeTitle(req.params.username, req.body.movieId)
   } catch (err) {
     next(err);
   }
