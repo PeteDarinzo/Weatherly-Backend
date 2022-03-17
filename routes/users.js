@@ -19,7 +19,6 @@ router.get("/:username/movies", async (req, res, next) => {
  * 
  * Save a movie to a user's watchlist
  * 
- * 
  */
 
 router.post("/:userId/movies", async (req, res, next) => {

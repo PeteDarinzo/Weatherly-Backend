@@ -5,6 +5,8 @@
 const express = require("express");
 const cors = require("cors");
 const { NotFoundError } = require("./expressError");
+
+const { authenticateJWT } = require("./middleware/auth");
 const authRoutes = require("./routes/auth");
 const movieRoutes = require("./routes/movies");
 const userRoutes = require("./routes/users");
@@ -14,6 +16,7 @@ const app = express();
 app.use(cors());
 // parse request bodies for JSON
 app.use(express.json());
+app.use(authenticateJWT);
 
 app.use("/auth", authRoutes);
 app.use("/movies", movieRoutes);

@@ -1,6 +1,5 @@
 "use strict"
 
-const { user } = require("pg/lib/defaults");
 const db = require("../db");
 const { BadRequestError } = require("../expressError");
 
@@ -15,23 +14,21 @@ class WatchList {
    * Throws BadRequestError on duplicates.
    */
 
-  static async addMovie({ userId, movieId }) {
+  static async addMovie({ username, movieId }) {
     const duplicateCheck = await db.query(
-      `SELECT user_id, movie_id
+      `SELECT username, movie_id
       FROM watchlist
-      WHERE user_id = $1 AND movie_id = $2`,
-      [userId, movieId]);
+      WHERE username = $1 AND movie_id = $2`,
+      [username, movieId]);
 
     if (duplicateCheck.rows[0]) throw new BadRequestError(`Duplicate movie ${movieId}`);
 
-    const date = new Date();
-
     const result = await db.query(
       `INSERT INTO watchlist
-      (user_id, movie_id, watched, date)
-      VALUES ($1, $2, $3, $4)
-      RETURNING user_id AS userId, movie_id AS movieId`,
-      [userId, movieId, false, date.toDateString()]
+      (username, movie_id, watched)
+      VALUES ($1, $2, $3)
+      RETURNING username, movie_id AS movieId`,
+      [username, movieId, false]
     );
     return result.rows[0];
   }
@@ -49,20 +46,25 @@ class WatchList {
         JOIN watchlist w 
         ON m.id = w.movie_id
         JOIN users u
-        ON w.user_id = u.id
+        ON w.username= u.username
         WHERE u.username = $1`,
       [username]);
     const list = result.rows;
     return list;
   }
 
+  /** Remove a particular title from a user's watchlist
+   * 
+   * 
+   * 
+   */
 
-  static async removeTitle(userId, movieId) {
+  static async removeTitle(username, movieId) {
     const result = db.query(
       `DELETE FROM watchlist
-       WHERE user_id = $1
+       WHERE username = $1
        AND movie_id = $2`,
-      [userId, movieId])
+      [username, movieId])
   }
 
 }

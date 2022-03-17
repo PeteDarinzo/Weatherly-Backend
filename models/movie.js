@@ -8,14 +8,13 @@ const { BadRequestError } = require("../expressError");
 
 class Movie {
 
-
   /** Create a movie, update db, return new movie data.
    * 
    * data should be {id, title, posterUrl}
    * 
    * Returns {title, posterUrl}
    * 
-   * Throws Badrequesterror if duplicate
+   * Returns if duplicate
    * 
    */
 
@@ -27,13 +26,15 @@ class Movie {
       [id]
     );
 
-    if (duplicateCheck.rows[0]) throw new BadRequestError(`Duplicate movie: ${title}`);
+    if (duplicateCheck.rows[0]) return;
+
+    // if (duplicateCheck.rows[0]) throw new BadRequestError(`Duplicate movie: ${title}`);
 
     const result = await db.query(
       `INSERT INTO movies
       (id, title, poster_url)
       VALUES ($1, $2, $3)
-      RETURNING id`,
+      RETURNING id, title, poster_url AS "posterUrl"`,
       [id, title, posterUrl]);
 
     const movie = result.rows;

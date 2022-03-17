@@ -49,6 +49,7 @@ router.get("/title/:title", async (req, res, next) => {
  */
 
 router.post("/save", async (req, res, next) => {
+  console.log("save movie received");
   try {
     await Movie.create({ ...req.body });
   } catch (err) {
