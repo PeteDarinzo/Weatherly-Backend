@@ -3,6 +3,7 @@ const router = new express.Router();
 const axios = require("axios");
 const WatchList = require("../models/watchlist");
 
+
 /** GET / { user } 
  *   
  * Get a user's watchlist
@@ -22,9 +23,9 @@ router.get("/:username/movies", async (req, res, next) => {
  */
 
 router.post("/:username/movies", async (req, res, next) => {
-  console.log("saving to watchlist");
   try {
-    await WatchList.addMovie({ username: req.params.username, movieId: req.body.movieId });
+    const movie = await WatchList.addMovie({ username: req.params.username, movieId: req.body.movieId });
+    return res.status(201).json({ movie });
   } catch (err) {
     next(err);
   }

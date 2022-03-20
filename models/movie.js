@@ -28,8 +28,6 @@ class Movie {
 
     if (duplicateCheck.rows[0]) return;
 
-    // if (duplicateCheck.rows[0]) throw new BadRequestError(`Duplicate movie: ${title}`);
-
     const result = await db.query(
       `INSERT INTO movies
       (id, title, poster_url)
@@ -37,8 +35,7 @@ class Movie {
       RETURNING id, title, poster_url AS "posterUrl"`,
       [id, title, posterUrl]);
 
-    const movie = result.rows;
-    return movie;
+    return result.rows;;
   }
 
 }

@@ -48,12 +48,16 @@ router.get("/title/:title", async (req, res, next) => {
  */
 
 router.post("/save", async (req, res, next) => {
-  console.log("save movie received");
   try {
-    await Movie.create({ ...req.body });
+    let movie = await Movie.create({ ...req.body });
+    if (movie) {
+      return res.status(201).json({ movie });
+    } else {
+      const msg = "Movie already exists.";
+      return res.status(200).json({ msg });
+    }
   } catch (err) {
     next(err);
   }
 });
-
 module.exports = router;
