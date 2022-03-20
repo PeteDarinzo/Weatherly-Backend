@@ -42,5 +42,5 @@ if (process.env.NODE_ENV === "production") {
 }
 /** END MY METHOD **/
 db.connect();
-
+console.log("FUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUCK");
 module.exports = db;
