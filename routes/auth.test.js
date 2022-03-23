@@ -1,7 +1,7 @@
 "use strict"
 
-const { send } = require("express/lib/response");
 const request = require("supertest");
+const axios = require("axios");
 
 const app = require("../app");
 
@@ -78,13 +78,16 @@ describe("POST /auth/token", function () {
 
 describe("POST /auth/register", function () {
   test("works for anon", async function () {
+
     const resp = await request(app)
-      .post("/auth/register")
-      .send({
-        username: "newUser",
-        password: "password",
-        zipCode: "00001"
-      });
+    .post("/auth/register")
+    .send({
+      username: "newUser",
+      password: "password",
+      postalCode: "00001",
+      countryCode: "US"
+    });
+
     expect(resp.statusCode).toEqual(201);
     expect(resp.body).toEqual({
       "token": expect.any(String)

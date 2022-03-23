@@ -1,10 +1,15 @@
+"use strict"
+
+/** Routes for movies */
+
+require('dotenv').config()
 const express = require("express");
 const router = new express.Router();
 const axios = require("axios");
-const OMBDKey = require("../API_KEY");
 const Movie = require("../models/movie");
 
 const OMDB_URL = "http://www.omdbapi.com/?";
+const OMDB_KEY = process.env.OMBD_KEY;
 
 /** GET / { movieId }
  * 
@@ -16,7 +21,7 @@ const OMDB_URL = "http://www.omdbapi.com/?";
 router.get("/:movieId", async (req, res, next) => {
   console.log("Getting movie from omdb");
   try {
-    const movie = await axios.get(`${OMDB_URL}`, { params: { i: req.params.movieId, apikey: OMBDKey } });
+    const movie = await axios.get(`${OMDB_URL}`, { params: { i: req.params.movieId, apikey: OMDB_KEY } });
     return res.status(200).json(movie.data);
   } catch (err) {
     next(err);
@@ -31,13 +36,12 @@ router.get("/:movieId", async (req, res, next) => {
 
 router.get("/title/:title", async (req, res, next) => {
   try {
-    const movies = await axios.get(`${OMDB_URL}`, { params: { t: req.params.title, apikey: OMBDKey } });
+    const movies = await axios.get(`${OMDB_URL}`, { params: { t: req.params.title, apikey: OMDB_KEY } });
     return res.status(200).json(movies.data);
   } catch (err) {
     next(err);
   }
 });
-
 
 /** POST / { id, title, posterUrl }
  * 
@@ -60,4 +64,5 @@ router.post("/save", async (req, res, next) => {
     next(err);
   }
 });
+
 module.exports = router;

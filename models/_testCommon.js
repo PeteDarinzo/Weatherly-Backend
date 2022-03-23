@@ -16,10 +16,15 @@ async function commonBeforeAll() {
   await db.query(`
          INSERT INTO users(username,
                            password,
-                           zip_code
+                           postal_code,
+                           lat,
+                           lon,
+                           city,
+                           country_code,
+                           units
                            )
-         VALUES ('u1', $1, '00001'),
-                ('u2', $2, '00002')
+         VALUES ('u1', $1, '00001', '0', '0', 'test-city', 'US', 'imperial'),
+                ('u2', $2, '00002', '0', '0', 'test-city', 'US', 'celsius')
          RETURNING username`,
     [
       await bcrypt.hash("password1", BCRYPT_WORK_FACTOR),

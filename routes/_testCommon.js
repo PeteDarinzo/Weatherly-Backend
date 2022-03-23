@@ -34,12 +34,21 @@ async function commonBeforeAll() {
   await User.register({
     username: "u1",
     password: "password1",
-    zipCode: "00001",
+    postalCode: "00001",
+    lat: "0",
+    lon: "0",
+    city: "test-city",
+    countryCode: "US"
   });
+
   await User.register({
     username: "u2",
     password: "password2",
-    zipCode: "00002",
+    postalCode: "00002",
+    lat: "0",
+    lon: "0",
+    city: "test-city",
+    countryCode: "US"
   });
 }
 

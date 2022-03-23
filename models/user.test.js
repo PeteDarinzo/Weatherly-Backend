@@ -20,6 +20,35 @@ beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
+/************************************** get */
+
+describe("get", function () {
+  test("works", async function () {
+    const user = await User.get("u1");
+    expect(user).toEqual({
+      username: "u1",
+      postalCode: "00001",
+      lat: "0",
+      lon: "0",
+      city: "test-city",
+      countryCode: "US",
+      maxTemp: null,
+      minTemp: null,
+      conditions: null,
+      units: "imperial"
+    });
+  });
+
+  test("not found if no such user", async function () {
+    try {
+      const user = await User.get("not-a-user");
+      fail();
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+});
+
 /************************************** authenticate */
 
 describe("authenticate", function () {
@@ -49,12 +78,16 @@ describe("authenticate", function () {
   });
 });
 
-/************************************** regiser */
+/************************************** register */
 
 describe("register", function () {
   const newUser = {
     username: "new",
-    zipCode: "00001"
+    postalCode: "00001",
+    lat: "0",
+    lon: "0",
+    city: "test-city",
+    countryCode: "US"
   }
 
   test("works", async function () {

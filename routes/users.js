@@ -1,8 +1,29 @@
+"use strict"
+
+/** Routes for users */
+
+
 const express = require("express");
+const User = require("../models/user");
 const router = new express.Router();
-const axios = require("axios");
 const WatchList = require("../models/watchlist");
 
+
+/** GET /[username] => { user }
+ * 
+ * Returns { username, postalCode, city, minTemp, maxTemp, conditions, units }
+ * 
+ * 
+ */
+
+router.get("/:username", async function (req, res, next) {
+  try {
+    const user = await User.get(req.params.username);
+    return res.status(200).json({ user });
+  } catch (err) {
+    return next(err);
+  }
+});
 
 /** GET / { user } 
  *   

@@ -1,8 +1,12 @@
 
 CREATE TABLE users (username VARCHAR(15) PRIMARY KEY,
                     password TEXT NOT NULL,
-                    zip_code TEXT NOT NULL,
-                    lat_lon TEXT,
+                    postal_code TEXT NOT NULL,
+                    lat TEXT,
+                    lon TEXT,
+                    city TEXT,
+                    country_code TEXT,
+                    units VARCHAR(15),
                     max_temp INTEGER,
                     min_temp INTEGER,
                     conditions TEXT
