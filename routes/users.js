@@ -59,7 +59,6 @@ router.post("/:username/movies", async (req, res, next) => {
  */
 
 router.delete("/:username/movies", async (req, res, next) => {
-  console.log(`deleting ${req.body.movieId}`);
   try {
     await WatchList.removeTitle(req.params.username, req.body.movieId)
   } catch (err) {

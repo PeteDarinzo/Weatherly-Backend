@@ -52,7 +52,6 @@ router.post("/register", async function (req, res, next) {
     const userData = { ...req.body, lat, lon, city: name }
     const newUser = await User.register(userData);
     const token = createToken(newUser);
-    console.log("TOKEN", token);
     return res.status(201).json({ token });
   } catch (err) {
     next(err);

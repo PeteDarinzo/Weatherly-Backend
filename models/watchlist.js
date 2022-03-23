@@ -15,7 +15,6 @@ class WatchList {
    */
 
   static async addMovie({ username, movieId }) {
-    console.log("duplicate check");
     const duplicateCheck = await db.query(
       `SELECT username, movie_id
       FROM watchlist
@@ -23,7 +22,6 @@ class WatchList {
       [username, movieId]);
 
     if (duplicateCheck.rows[0]) throw new BadRequestError(`Duplicate movie ${movieId}`);
-    console.log("no duplicates");
 
     const result = await db.query(
       `INSERT INTO watchlist
