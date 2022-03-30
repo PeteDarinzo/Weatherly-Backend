@@ -22,6 +22,8 @@ if (process.env.NODE_ENV === "production") {
 
 
 /** MY METHOD **/
+// password must be assigned to Postgresql user using ALTER USER 
+// See: https://chartio.com/resources/tutorials/how-to-set-the-default-user-password-in-postgresql/
 // if (process.env.NODE_ENV === "production") {
 //   db = new Client({
 //     host: "localhost",
@@ -41,6 +43,8 @@ if (process.env.NODE_ENV === "production") {
 //   });
 // }
 /** END MY METHOD **/
+
 db.connect();
 
 module.exports = db;
+
