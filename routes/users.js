@@ -2,11 +2,14 @@
 
 /** Routes for users */
 
-
 const express = require("express");
 const User = require("../models/user");
 const router = new express.Router();
+const axios = require("axios");
 const WatchList = require("../models/watchlist");
+
+const OPEN_WEATHER_URL = "http://api.openweathermap.org/geo/1.0/zip";
+const OPEN_WEATHER_KEY = process.env.OPEN_WEATHER_KEY;
 
 
 /** GET /[username] => { user }
@@ -52,6 +55,35 @@ router.post("/:username/movies", async (req, res, next) => {
   }
 });
 
+/** PATCH
+ * 
+ * Update a user
+ * 
+ */
+
+router.patch("/:username", async (req, res, next) => {
+  try {
+    let userData;
+    if (req.body.postalCode) {
+      const { postalCode, countryCode } = req.body;
+      const coordRes = await axios.get(`${OPEN_WEATHER_URL}`, {
+        params: {
+          zip: `${postalCode},${countryCode}`,
+          appid: OPEN_WEATHER_KEY
+        }
+      });
+      const { lat, lon, name } = coordRes.data;
+      userData = { ...req.body, lat, lon, city: name };
+    } else {
+      userData = { ...req.body };
+    }
+    const user = await User.update(req.params.username, userData);
+    return res.status(200).json({ user });
+  } catch (err) {
+    next(err);
+  }
+});
+
 /** DELETE 
  * 
  * Delete a title from a user's watchlist
@@ -65,6 +97,8 @@ router.delete("/:username/movies", async (req, res, next) => {
     next(err);
   }
 });
+
+
 
 
 module.exports = router;

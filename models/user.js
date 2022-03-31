@@ -4,6 +4,7 @@ const db = require("../db");
 const bcrypt = require("bcrypt");
 const { BadRequestError, UnauthorizedError, NotFoundError } = require("../expressError");
 const { BCRYPT_WORK_FACTOR } = require("../config");
+const sqlForPartialUpdate = require("../helpers/sql");
 
 /** Functions for users. */
 
@@ -25,8 +26,12 @@ class User {
         country_code AS "countryCode",
         max_temp AS "maxTemp",
         min_temp AS "minTemp",
-        conditions,
-        units
+        units,
+        thunderstorm,
+        drizzle,
+        rain,
+        snow,
+        overcast
       FROM users
       WHERE username = $1`,
       [username]
@@ -98,7 +103,44 @@ class User {
     const user = result.rows[0];
     return user;
   }
+
+  static async update(username, data) {
+    const { setCols, values } = sqlForPartialUpdate(
+      data,
+      {
+        postalCode: "postal_code",
+        countryCode: "country_code",
+        minTemp: "min_temp",
+        maxTemp: "max_temp"
+      });
+    const usernameVarIdx = "$" + (values.length + 1); // make username last item
+
+    const querySql = `UPDATE users
+                      SET ${setCols}
+                      WHERE username = ${usernameVarIdx}
+                      RETURNING 
+                                username,
+                                postal_code AS "postalCode",
+                                lat,
+                                lon,
+                                city,
+                                country_code AS "countryCode",
+                                max_temp AS "maxTemp",
+                                min_temp AS "minTemp",
+                                units,
+                                thunderstorm,
+                                drizzle,
+                                rain,
+                                snow,
+                                overcast`;
+
+    const result = await db.query(querySql, [...values, username]); // username is always the last value
+    const user = result.rows[0];
+    if (!user) throw new NotFoundError(`No user: ${username}`);
+    return user;
+  }
 }
+
 
 
 module.exports = User;

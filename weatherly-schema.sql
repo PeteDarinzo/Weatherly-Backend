@@ -1,7 +1,7 @@
 
 CREATE TABLE users (username VARCHAR(15) PRIMARY KEY,
                     password TEXT NOT NULL,
-                    postal_code TEXT NOT NULL,
+                    postal_code VARCHAR(15) NOT NULL,
                     lat TEXT,
                     lon TEXT,
                     city TEXT,
@@ -9,7 +9,11 @@ CREATE TABLE users (username VARCHAR(15) PRIMARY KEY,
                     units VARCHAR(15),
                     max_temp INTEGER,
                     min_temp INTEGER,
-                    conditions TEXT
+                    thunderstorm BOOLEAN DEFAULT FALSE,
+                    drizzle BOOLEAN DEFAULT FALSE,
+                    rain BOOLEAN DEFAULT FALSE,
+                    snow BOOLEAN DEFAULT FALSE,
+                    overcast BOOLEAN DEFAULT FALSE
                     );
 
 CREATE TABLE movies (id TEXT PRIMARY KEY,

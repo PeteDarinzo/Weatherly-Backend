@@ -8,6 +8,10 @@ const express = require("express");
 const router = new express.Router();
 const { createToken } = require("../helpers/tokens");
 const axios = require("axios");
+const jsonschema = require("jsonschema");
+const userAuthSchema = require("../schemas/userAuth.json");
+const userRegisterSchema = require("../schemas/userRegister.json");
+const { BadRequestError } = require('../expressError');
 const OPEN_WEATHER_URL = "http://api.openweathermap.org/geo/1.0/zip";
 const OPEN_WEATHER_KEY = process.env.OPEN_WEATHER_KEY;
 
@@ -20,6 +24,11 @@ const OPEN_WEATHER_KEY = process.env.OPEN_WEATHER_KEY;
 
 router.post("/token", async (req, res, next) => {
   try {
+    const validator = jsonschema.validate(req.body, userAuthSchema);
+    if (!validator.valid) {
+      const errs = validator.errors.map(e => e.stack);
+      throw new BadRequestError(errs);
+    }
     const { username, password } = req.body;
     const user = await User.authenticate(username, password);
     const token = createToken(user);
@@ -41,6 +50,11 @@ router.post("/token", async (req, res, next) => {
 
 router.post("/register", async function (req, res, next) {
   try {
+    const validator = jsonschema.validate(req.body, userRegisterSchema);
+    if (!validator.valid) {
+      const errs = validator.errors.map(e => e.stack);
+      throw new BadRequestError(errs);
+    }
     const { postalCode, countryCode } = req.body;
     const coordRes = await axios.get(`${OPEN_WEATHER_URL}`, {
       params: {
