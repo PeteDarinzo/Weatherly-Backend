@@ -35,7 +35,7 @@ router.get("/:movieId", async (req, res, next) => {
 
 router.get("/title/:title", async (req, res, next) => {
   try {
-    const movies = await axios.get(`${OMDB_URL}`, { params: { t: req.params.title, apikey: OMDB_KEY } });
+    const movies = await axios.get(`${OMDB_URL}`, { params: { s: req.params.title, apikey: OMDB_KEY } });
     return res.status(200).json(movies.data);
   } catch (err) {
     next(err);
