@@ -11,32 +11,32 @@ const Movie = require("../models/movie");
 const OMDB_URL = "http://www.omdbapi.com/?";
 const OMDB_KEY = process.env.OMBD_KEY;
 
-/** GET / { movieId }
+
+/** GET / { title } 
+ * Query OMDB for movies by title
  * 
- * Query OMBD for a movie by id
- * 
- * Returns JSON movie data
+ * Returns list of JSON movie data
  */
 
-router.get("/:movieId", async (req, res, next) => {
+router.get("/title", async (req, res, next) => {
   try {
-    const movie = await axios.get(`${OMDB_URL}`, { params: { i: req.params.movieId, apikey: OMDB_KEY } });
-    return res.status(200).json(movie.data);
+    const movies = await axios.get(`${OMDB_URL}`, { params: { s: req.query.title, apikey: OMDB_KEY } });
+    return res.status(200).json(movies.data);
   } catch (err) {
     next(err);
   }
 });
 
-/** GET / { title }
- * Query OMDB for a movie by title
+/** GET / { id } 
+ * Query OMDB for movies by id
  * 
  * Returns JSON movie data
  */
 
-router.get("/title/:title", async (req, res, next) => {
+router.get("/id", async (req, res, next) => {
   try {
-    const movies = await axios.get(`${OMDB_URL}`, { params: { s: req.params.title, apikey: OMDB_KEY } });
-    return res.status(200).json(movies.data);
+    const movie = await axios.get(`${OMDB_URL}`, { params: { i: req.query.movieId, apikey: OMDB_KEY } });
+    return res.status(200).json(movie.data);
   } catch (err) {
     next(err);
   }
