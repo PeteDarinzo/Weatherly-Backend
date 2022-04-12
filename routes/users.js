@@ -7,19 +7,30 @@ const User = require("../models/user");
 const router = new express.Router();
 const axios = require("axios");
 const WatchList = require("../models/watchlist");
+const { ensureCorrectUser } = require("../middleware/auth");
 
 const OPEN_WEATHER_URL = "http://api.openweathermap.org/geo/1.0/zip";
 const OPEN_WEATHER_KEY = process.env.OPEN_WEATHER_KEY;
 
 
-/** GET /[username] => { user }
+/** GET /[username]: => { user }
  * 
- * Returns { username, postalCode, city, minTemp, maxTemp, conditions, units }
- * 
+ * Returns { 
+ * username, 
+ * postalCode, 
+ * city, 
+ * minTemp, 
+ * maxTemp, 
+ * thunderstorm,
+ * drizzle,
+ * rain,
+ * snow,
+ * overcast, 
+ * units }
  * 
  */
 
-router.get("/:username", async function (req, res, next) {
+router.get("/:username", ensureCorrectUser, async function (req, res, next) {
   try {
     const user = await User.get(req.params.username);
     return res.status(200).json({ user });
@@ -28,9 +39,11 @@ router.get("/:username", async function (req, res, next) {
   }
 });
 
-/** GET / { user } 
+/** GET /[username]/movies:
  *   
  * Get a user's watchlist
+ * 
+ * returns { titles }
  * 
  */
 
@@ -40,28 +53,32 @@ router.get("/:username/movies", async (req, res, next) => {
 });
 
 
-/** POST / {}
+/** POST /[username]/movies: { movie }
  * 
  * Save a movie to a user's watchlist
  * 
+ * returns { movie }
+ * 
  */
 
-router.post("/:username/movies", async (req, res, next) => {
+router.post("/:username/movies", ensureCorrectUser, async (req, res, next) => {
   try {
-    const movie = await WatchList.addMovie({ username: req.params.username, movieId: req.body.movieId });
+    const movie = await WatchList.addMovie(req.params.username, req.body.movieId);
     return res.status(201).json({ movie });
   } catch (err) {
     next(err);
   }
 });
 
-/** PATCH
+/** PATCH /[username]: { userData }
  * 
- * Update a user
+ * Update a user's location or weather preferences
+ * 
+ * returns { user }
  * 
  */
 
-router.patch("/:username", async (req, res, next) => {
+router.patch("/:username", ensureCorrectUser, async (req, res, next) => {
   try {
     let userData;
     if (req.body.postalCode) {
@@ -84,15 +101,18 @@ router.patch("/:username", async (req, res, next) => {
   }
 });
 
-/** DELETE 
+/** DELETE /[username]/movies: { movieId }
  * 
  * Delete a title from a user's watchlist
  * 
+ * returns { deleted: movieId }
+ * 
  */
 
-router.delete("/:username/movies", async (req, res, next) => {
+router.delete("/:username/movies", ensureCorrectUser, async (req, res, next) => {
   try {
-    await WatchList.removeTitle(req.params.username, req.body.movieId)
+    await WatchList.removeTitle(req.params.username, req.body.movieId);
+    return res.json({ deleted: req.body.movieId });
   } catch (err) {
     next(err);
   }

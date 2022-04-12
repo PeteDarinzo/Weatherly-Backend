@@ -32,6 +32,6 @@ describe("create", function () {
 
   test("works", async function () {
     let movie = await Movie.create(newMovie);
-    expect(movie[0]).toEqual(newMovie);
+    expect(movie).toEqual(newMovie);
   });
 });

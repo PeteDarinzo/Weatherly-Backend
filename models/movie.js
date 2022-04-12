@@ -25,6 +25,7 @@ class Movie {
       [id]
     );
 
+    // not an error if a movie already exists
     if (duplicateCheck.rows[0]) return;
 
     const result = await db.query(
@@ -34,7 +35,7 @@ class Movie {
       RETURNING id, title, poster_url AS "posterUrl"`,
       [id, title, posterUrl]);
 
-    return result.rows;;
+    return result.rows[0];
   }
 
 }

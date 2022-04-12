@@ -12,19 +12,24 @@ const {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
+  u1Token,
+  u2Token
 } = require("./_testCommon");
+const { set } = require("../app");
+const req = require("express/lib/request");
 
 beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
-/************************************** GET /:username */
+/************************************** GET users/:username */
 
 describe("GET /:username", function () {
-  test("works", async function () {
+  test("works for same user", async function () {
     const resp = await request(app)
-      .get("/users/u1");
+      .get("/users/u1")
+      .set("authorization", `Bearer ${u1Token}`);
     expect(resp.statusCode).toEqual(200);
     expect(resp.body).toEqual({
       user:
@@ -47,10 +52,42 @@ describe("GET /:username", function () {
     })
   });
 
-  test("not found for nonexistent user", async function () {
+  test("unauth for other users", async function () {
     const resp = await request(app)
-      .get("/users/nonExistent");
-    expect(resp.statusCode).toEqual(404);
+      .get("/users/u1")
+      .set("authorization", `Bearer ${u2Token}`);
+    expect(resp.statusCode).toEqual(401);
+  });
+});
+
+/************************************** POST users/:username */
+
+describe("POST /:username/movies", function () {
+
+  test("adds a movie to a user's list", async function () {
+    const resp = await request(app)
+      .post("/users/u1/movies")
+      .send({
+        movieId: "testId-1"
+      })
+      .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.statusCode).toEqual(201);
+    expect(resp.body).toEqual({
+      movie: {
+        username: "u1",
+        movieid: "testId-1"
+      }
+    });
+  });
+
+  test("can't add movie to another user's list", async function () {
+    const resp = await request(app)
+      .post("/users/u1/movies")
+      .send({
+        movieId: "testId-1"
+      })
+      .set("authorization", `Bearer ${u2Token}`);
+    expect(resp.statusCode).toEqual(401);
   });
 
 });
@@ -75,7 +112,8 @@ describe("PATCH /:username", function () {
       .send({
         postalCode: "00002",
         countryCode: "US",
-      });
+      })
+      .set("authorization", `Bearer ${u1Token}`);
 
     expect(resp.body).toEqual({
       user: {
@@ -107,7 +145,8 @@ describe("PATCH /:username", function () {
         drizzle: true,
         rain: true,
         snow: true
-      });
+      })
+      .set("authorization", `Bearer ${u1Token}`);
 
     expect(resp.body).toEqual({
       user: {
@@ -129,24 +168,83 @@ describe("PATCH /:username", function () {
     });
   });
 
-
-  test("throws not found if no such user", async function () {
+  test("throws bad request if bad data", async function () {
     const resp = await request(app)
-      .patch("/users/nonexistent")
+      .patch("/users/u1")
+      .send({})
+      .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.statusCode).toEqual(400);
+  });
+
+  test("unauth for different user", async function () {
+
+    const resp = await request(app)
+      .patch("/users/u1")
       .send({
         minTemp: 35,
         maxTemp: 85,
         drizzle: true,
         rain: true,
         snow: true
-      });
-    expect(resp.statusCode).toEqual(404);
+      })
+      .set("authorization", `Bearer ${u2Token}`);
+
+    expect(resp.statusCode).toEqual(401);
+  });
+});
+
+
+/************************************** DELETE /users/:username/movies */
+
+describe("DELETE /:username/movies", function () {
+
+  test("removes a movie from a user's list", async function () {
+    const addResp = await request(app)
+      .post("/users/u1/movies")
+      .send({
+        movieId: "testId-1"
+      })
+      .set("authorization", `Bearer ${u1Token}`);
+    expect(addResp.statusCode).toEqual(201);
+
+    const deleteResp = await request(app)
+      .delete("/users/u1/movies")
+      .send({
+        movieId: "testId-1"
+      })
+      .set("authorization", `Bearer ${u1Token}`);
+
+    expect(deleteResp.body).toEqual({
+      deleted: "testId-1"
+    });
   });
 
-  test("throws bad request if bad data", async function () {
+  test("can't add a  movie to another user's list", async function () {
     const resp = await request(app)
-      .patch("/users/u1")
-      .send({});
-    expect(resp.statusCode).toEqual(400);
+      .post("/users/u1/movies")
+      .send({
+        movieId: "testId-1"
+      })
+      .set("authorization", `Bearer ${u2Token}`);
+    expect(resp.statusCode).toEqual(401);
+  });
+
+  test("can't delete a movie to another user's list", async function () {
+    const addResp = await request(app)
+      .post("/users/u1/movies")
+      .send({
+        movieId: "testId-1"
+      })
+      .set("authorization", `Bearer ${u1Token}`);
+    expect(addResp.statusCode).toEqual(201);
+
+    const deleteResp = await request(app)
+      .delete("/users/u1/movies")
+      .send({
+        movieId: "testId-1"
+      })
+      .set("authorization", `Bearer ${u2Token}`);
+
+    expect(deleteResp.statusCode).toEqual(401);
   });
 });

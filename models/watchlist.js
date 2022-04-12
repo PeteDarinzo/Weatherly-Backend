@@ -14,7 +14,7 @@ class WatchList {
    * Throws BadRequestError on duplicates.
    */
 
-  static async addMovie({ username, movieId }) {
+  static async addMovie(username, movieId) {
     const duplicateCheck = await db.query(
       `SELECT username, movie_id
       FROM watchlist

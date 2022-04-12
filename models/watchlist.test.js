@@ -25,17 +25,17 @@ afterAll(commonAfterAll);
 
 describe("add movie and get titles", function () {
   test("works", async function () {
-    await WatchList.addMovie({ username: "u1", movieId: "testId-1" });
+    await WatchList.addMovie("u1", "testId-1");
     const titles = await WatchList.getTitles("u1");
     expect(titles).toEqual([
       { id: "testId-1", title: "title-1", posterUrl: "http://c1.img" }
-    ])
+    ]);
   });
 
   test("bad request with duplicate title", async function () {
     try {
-      await WatchList.addMovie({ username: "u1", movieId: "testId-1" });
-      await WatchList.addMovie({ username: "u1", movieId: "testId-1" });
+      await WatchList.addMovie("u1", "testId-1");
+      await WatchList.addMovie("u1", "testId-1");
       fail();
     } catch (err) {
       expect(err instanceof BadRequestError).toBeTruthy();
@@ -47,8 +47,8 @@ describe("add movie and get titles", function () {
 
 describe("remove movie from watchlist", function () {
   test("works", async function () {
-    await WatchList.addMovie({ username: "u1", movieId: "testId-1" });
-    await WatchList.addMovie({ username: "u1", movieId: "testId-2" });
+    await WatchList.addMovie("u1", "testId-1");
+    await WatchList.addMovie("u1", "testId-2");
     let titles = await WatchList.getTitles("u1");
     expect(titles).toEqual([
       { id: "testId-1", title: "title-1", posterUrl: "http://c1.img" },

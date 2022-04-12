@@ -12,7 +12,8 @@ const OMDB_URL = "http://www.omdbapi.com/?";
 const OMDB_KEY = process.env.OMBD_KEY;
 
 
-/** GET / { title } 
+/** GET /title: { title } 
+ * 
  * Query OMDB for movies by title
  * 
  * Returns list of JSON movie data
@@ -27,7 +28,8 @@ router.get("/title", async (req, res, next) => {
   }
 });
 
-/** GET / { id } 
+/** GET /id: { id } 
+ * 
  * Query OMDB for movies by id
  * 
  * Returns JSON movie data
@@ -42,11 +44,11 @@ router.get("/id", async (req, res, next) => {
   }
 });
 
-/** POST / { id, title, posterUrl }
+/** POST /save: { id, title, posterUrl }
  * 
  * Add movie to database
  * 
- * Returns { }
+ * Returns { movie } or { msg: "Movie already exists." }
  * 
  */
 

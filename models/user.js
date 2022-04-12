@@ -11,10 +11,20 @@ const sqlForPartialUpdate = require("../helpers/sql");
 class User {
 
   /** Return a user's data
-   * Returns { username, postalCode, country, maxTemp, minTemp, conditions, units }
-   * 
-   * Throws NotFoundError if user not found.
-   */
+    * Returns { username, 
+    * postalCode, 
+    * city, 
+    * minTemp, 
+    * maxTemp, 
+    * thunderstorm,
+    * drizzle,
+    * rain,
+    * snow,
+    * overcast, 
+    * units }
+    * 
+    * Throws NotFoundError if user not found.
+    */
 
   static async get(username) {
     const userRes = await db.query(
