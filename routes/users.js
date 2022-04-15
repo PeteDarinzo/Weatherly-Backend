@@ -111,6 +111,7 @@ router.patch("/:username", ensureCorrectUser, async (req, res, next) => {
 
 router.delete("/:username/movies", ensureCorrectUser, async (req, res, next) => {
   try {
+    console.log(req.params.username);
     await WatchList.removeTitle(req.params.username, req.body.movieId);
     return res.json({ deleted: req.body.movieId });
   } catch (err) {

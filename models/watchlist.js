@@ -1,7 +1,7 @@
 "use strict"
 
 const db = require("../db");
-const { BadRequestError } = require("../expressError");
+const { BadRequestError, NotFoundError } = require("../expressError");
 
 /** Functions for usersmovies table */
 
@@ -60,13 +60,15 @@ class WatchList {
    */
 
   static async removeTitle(username, movieId) {
-    const result = db.query(
+    const result = await db.query(
       `DELETE FROM watchlist
        WHERE username = $1
-       AND movie_id = $2`,
-      [username, movieId])
+       AND movie_id = $2
+       RETURNING movie_id`,
+      [username, movieId]);
+    const movie = result.rows[0];
+    if (!movie) throw new NotFoundError(`No movie in watchlist: ${movieId}`);
   }
-
 }
 
 module.exports = WatchList;

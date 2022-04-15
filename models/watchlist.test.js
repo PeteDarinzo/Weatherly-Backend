@@ -60,5 +60,13 @@ describe("remove movie from watchlist", function () {
     expect(titles).toEqual([]);
   });
 
+  test("not found not in watchlist", async function () {
+    try {
+      await WatchList.removeTitle("u1", "testId-2");
+      fail();
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
 });
 
