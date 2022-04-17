@@ -54,7 +54,7 @@ router.get("/id", async (req, res, next) => {
 
 router.post("/save", async (req, res, next) => {
   try {
-    let movie = await Movie.create({ ...req.body });
+    const movie = await Movie.create({ ...req.body });
     if (movie) {
       return res.status(201).json({ movie });
     } else {

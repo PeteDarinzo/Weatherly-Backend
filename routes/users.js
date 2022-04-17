@@ -64,7 +64,7 @@ router.get("/:username/movies", async (req, res, next) => {
 router.post("/:username/movies", ensureCorrectUser, async (req, res, next) => {
   try {
     const movie = await WatchList.addMovie(req.params.username, req.body.movieId);
-    return res.status(201).json({ movie });
+      return res.status(201).json({ movie });
   } catch (err) {
     next(err);
   }
