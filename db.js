@@ -3,21 +3,28 @@
 const { Client } = require("pg");
 const { getDatabaseUri } = require("./config");
 
-let db
+const db = new Client({
+  connectionString: getDatabaseUri(),
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
+
+// let db
 
 /** Springboard Method */
-if (process.env.NODE_ENV === "production") {
-  db = new Client({
-    connectionString: getDatabaseUri(),
-    ssl: {
-      rejectUnauthorized: false
-    }
-  });
-} else {
-  db = new Client({
-    connectionString: getDatabaseUri()
-  });
-}
+// if (process.env.NODE_ENV === "production") {
+//   db = new Client({
+//     connectionString: getDatabaseUri(),
+//     ssl: {
+//       rejectUnauthorized: false
+//     }
+//   });
+// } else {
+//   db = new Client({
+//     connectionString: getDatabaseUri()
+//   });
+// }
 /** END Springboard Method */
 
 
