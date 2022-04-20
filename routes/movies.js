@@ -8,7 +8,7 @@ const router = new express.Router();
 const axios = require("axios");
 const Movie = require("../models/movie");
 
-const OMDB_URL = "http://www.omdbapi.com";
+const OMDB_URL = "http://www.omdbapi.com/?";
 const OMDB_KEY = process.env.OMBD_KEY;
 
 /** GET /title: { title } 
@@ -20,7 +20,10 @@ const OMDB_KEY = process.env.OMBD_KEY;
 
 router.get("/title", async (req, res, next) => {
   try {
-    const movies = await axios.get("http://www.omdbapi.com", { params: { apikey: OMDB_KEY }, s: req.query.title });
+    const movies = await axios.get(`${OMDB_URL}`, { 
+      params: { 
+        s: req.query.title, 
+        apikey: OMDB_KEY } });
     return res.status(200).json(movies.data);
   } catch (err) {
     next(err);
