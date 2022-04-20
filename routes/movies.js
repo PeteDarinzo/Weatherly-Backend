@@ -23,7 +23,7 @@ router.get("/title", async (req, res, next) => {
     const movies = await axios.get("http://www.omdbapi.com", {
       params: {
         apikey: OMDB_KEY,
-        s: req.query.title
+        // s: req.query.title
       }
     });
     return res.status(200).json(movies.data);
