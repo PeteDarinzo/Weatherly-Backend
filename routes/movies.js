@@ -9,7 +9,8 @@ const axios = require("axios");
 const Movie = require("../models/movie");
 
 const OMDB_URL = "http://www.omdbapi.com/?";
-const OMDB_KEY = process.env.OMBD_KEY;
+// const OMDB_KEY = process.env.OMBD_KEY;
+const OMDB_KEY = process.env.OMDB_API_KEY;
 
 /** GET /title: { title } 
  * 
