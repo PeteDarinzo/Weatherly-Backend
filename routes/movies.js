@@ -8,7 +8,7 @@ const router = new express.Router();
 const axios = require("axios");
 const Movie = require("../models/movie");
 
-const OMDB_URL = "http://www.omdbapi.com/";
+const OMDB_URL = "http://www.omdbapi.com";
 const OMDB_KEY = process.env.OMBD_KEY;
 
 /** GET /title: { title } 
