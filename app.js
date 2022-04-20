@@ -4,6 +4,7 @@
 
 const express = require("express");
 const cors = require("cors");
+
 const { NotFoundError } = require("./expressError");
 
 const { authenticateJWT } = require("./middleware/auth");
@@ -32,6 +33,7 @@ app.use((req, res, next) => {
 /** Generic error handler; anything unhandled goes here. */
 
 app.use((err, req, res, next) => {
+  if (process.env.NODE_ENV !== "test") console.error(err.stack);
   // the default status is 500 Internal Server Error
   let status = err.status || 500;
   let message = err.message;
