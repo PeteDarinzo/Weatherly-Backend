@@ -27,8 +27,8 @@ if (process.env.NODE_ENV === "production") {
 // if (process.env.NODE_ENV === "production") {
 //   db = new Client({
 //     host: "localhost",
-//     user: "pete",
-//     password: "vampire",
+//     user: "",
+//     password: "",
 //     database: getDatabaseUri(),
 //     ssl: {
 //       rejectUnauthorized: false
@@ -37,8 +37,8 @@ if (process.env.NODE_ENV === "production") {
 // } else {
 //   db = new Client({
 //     host: "localhost",
-//     user: "pete",
-//     password: "vampire",
+//     user: "",
+//     password: "",
 //     database: getDatabaseUri()
 //   });
 // }
