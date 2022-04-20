@@ -20,15 +20,15 @@ const OMDB_KEY = process.env.OMBD_KEY;
 
 router.get("/title", async (req, res, next) => {
   try {
-    const movies = await axios.get(`${OMDB_URL}apikey=8bc520b7&s=${req.query.title}`);
-    // , 
-    // {
-    //   params: {
-    //     apikey: OMDB_KEY,
-    //     // s: req.query.title
-    //   }
-    // }
-    // );
+    const movies = await axios.get(`${OMDB_URL}`,
+      {
+        params: {
+          s: req.query.title,
+          apikey: "8bc520b7"
+
+        }
+      }
+    );
     return res.status(200).json(movies.data);
   } catch (err) {
     next(err);
