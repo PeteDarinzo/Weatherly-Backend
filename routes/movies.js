@@ -28,8 +28,7 @@ router.get("/title", async (req, res, next) => {
           apikey: OMDB_KEY
 
         }
-      }
-    );
+      });
     return res.status(200).json(movies.data);
   } catch (err) {
     next(err);
@@ -45,7 +44,14 @@ router.get("/title", async (req, res, next) => {
 
 router.get("/id", async (req, res, next) => {
   try {
-    const movie = await axios.get(`${OMDB_URL}`, { params: { i: req.query.movieId, apikey: OMDB_KEY } });
+    const movie = await axios.get(`${OMDB_URL}`,
+      {
+        params:
+        {
+          i: req.query.movieId,
+          apikey: OMDB_KEY
+        }
+      });
     return res.status(200).json(movie.data);
   } catch (err) {
     next(err);
