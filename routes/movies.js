@@ -24,7 +24,7 @@ router.get("/title", async (req, res, next) => {
       {
         params: {
           s: req.query.title,
-          apikey: "8bc520b7"
+          apikey: OMDB_KEY
 
         }
       }
